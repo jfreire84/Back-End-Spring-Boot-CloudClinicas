@@ -10,6 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table(name = "cliente") 
@@ -21,26 +25,32 @@ public class Cliente implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
+	private Long id;
 	
+	@NotEmpty
 	private String nombre;
+	
+	@NotEmpty
 	private String apellidos;
 	
 	//Mediante el uso de @Temporal es posible determinar que nuestro atributo almacena Hora.
 	@Temporal(TemporalType.DATE)
 	private Date fechanac;
 	
+	@Email
 	private String email;
+	
+	@Length(min=10, max=1000)
 	private String historial;
 	
 	@Temporal(TemporalType.DATE)
 	private Date fecha;
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
