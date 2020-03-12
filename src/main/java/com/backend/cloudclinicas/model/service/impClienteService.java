@@ -38,7 +38,6 @@ public class impClienteService implements InterfazClienteService {
 		return clienteDao.save(cliente);
 	}
 
-
 	//Borrar cliente
 	@Override
 	@Transactional
