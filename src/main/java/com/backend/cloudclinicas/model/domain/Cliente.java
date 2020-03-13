@@ -2,6 +2,8 @@ package com.backend.cloudclinicas.model.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,8 +12,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Email;
-
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -27,6 +28,7 @@ public class Cliente implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotNull
 	private String nombre;
 	private String apellidos;
 	
@@ -34,7 +36,7 @@ public class Cliente implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date fechanac;
 	
-	@Email
+	@Column(nullable=false, unique=true)
 	private String email;
 	
 	@Length(min=10, max=1000)
