@@ -1,6 +1,5 @@
 package com.backend.cloudclinicas.controller;
 
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,97 +24,118 @@ import com.backend.cloudclinicas.model.service.InterfazClienteService;
 @RestController
 @RequestMapping("/api")
 public class ClienteController {
-	
+
 	@Autowired
 	private InterfazClienteService clienteService;
-	
-	//Metodo de la url para buscar todos los clientes.
+
+	// Metodo de la url para buscar todos los clientes.
 	@GetMapping("/clientes")
-	public List<Cliente> buscarTodos(){
+	public List<Cliente> buscarTodos() {
 		return clienteService.findAll();
 	}
-	
-	//MÉTODO DE LA URL PARA BUSCAR POR ID.
 
-	//En el controlador tenemos que controlar el manejo de errors, con la clase ResponseEntity de Spring.
-	//Controlamos el error al buscar un id de cliente que no existe o es nulo.
+	// MÉTODO DE LA URL PARA BUSCAR POR ID.
+
+	// En el controlador tenemos que controlar el manejo de errors, con la clase
+	// ResponseEntity de Spring.
+	// Controlamos el error al buscar un id de cliente que no existe o es nulo.
 	@GetMapping("/clientes/{id}")
 	public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
-				
+
 		Map<String, Object> respuesta = new HashMap<>();
-		
-		//Aqui manejamos todos los errores que se generen en el servidor y la base de datos.
+
+		// Aqui manejamos todos los errores que se generen en el servidor y la base de
+		// datos.
 		Cliente cliente = null;
 		try {
 			cliente = clienteService.findById(id);
-		}catch(DataAccessException e) {
+		} catch (DataAccessException e) {
 			respuesta.put("mensaje", "El cliente Id: ".concat(id.toString().concat("No existe en la base de datos")));
 			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.INTERNAL_SERVER_ERROR);
-			
+
 		}
-		
-		//Error si el cliente es nulo.
-		if(cliente == null) {
+
+		// Error si el cliente es nulo.
+		if (cliente == null) {
 			respuesta.put("mensaje", "Error al realizar la consulta en la base de datos");
 			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.NOT_FOUND);
 		}
-		
-		return new ResponseEntity<Cliente>(cliente, HttpStatus.OK); 
+
+		return new ResponseEntity<Cliente>(cliente, HttpStatus.OK);
 	}
-	
-	//MÉTODO DE LA URL PARA CREAR UN CLIENTE
-	
+
+	// MÉTODO DE LA URL PARA CREAR UN CLIENTE
+
 	@PostMapping("/clientes")
 	public ResponseEntity<?> crearCliente(@RequestBody Cliente cliente) {
 		Cliente nuevoCliente = null;
 		Map<String, Object> respuesta = new HashMap<>();
-		
-		
-		//Control de errores al insertar un nuevo cliente
+
+		// Control de errores al insertar un nuevo cliente
 		try {
 			nuevoCliente = clienteService.save(cliente);
-		}catch(DataAccessException e) {
+		} catch (DataAccessException e) {
 			respuesta.put("mensaje", "Error al insertar cliente en la base de datos");
 			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
+
 		respuesta.put("mensaje", "Cliente creado con exito");
 		respuesta.put("mensaje", nuevoCliente);
-		return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.CREATED );
+		return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.CREATED);
 	}
-	
-	
-	//MÉTODO DE LA URL PARA ACTUALIZAR UN CLIENTE.
-	
+
+	// MÉTODO DE LA URL PARA ACTUALIZAR UN CLIENTE.
+
 	@PutMapping("/clientes/{id}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cliente actualizar(@RequestBody Cliente cliente, @PathVariable Long id) {
-		//Guardamos en un objeto de tipo cliente el cliente con el id buscado
-		Cliente clienteBuscado = clienteService.findById(id);
+	public ResponseEntity<?> actualizar(@RequestBody Cliente cliente, @PathVariable Long id) {
+		// Guardamos en un objeto de tipo cliente el cliente con el id buscado
+
+		Cliente clienteBuscado;
+		
+		Map<String, Object> respuesta = new HashMap<>();
+
+		try {
+			clienteBuscado = clienteService.findById(id);
+		}catch (DataAccessException e) {
+			respuesta.put("mensaje", "Error al borrar el cliente");
+			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.NOT_FOUND);
+		}
+		
+		// Error si el cliente es nulo.
+		if (clienteBuscado == null) {
+			respuesta.put("mensaje", "Error al realizar la actualizacion en la base de datos");
+			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.NOT_FOUND);
+		}
+
 		clienteBuscado.setApellidos(cliente.getApellidos());
 		clienteBuscado.setNombre(cliente.getNombre());
 		clienteBuscado.setEmail(cliente.getEmail());
 		clienteBuscado.setHistorial(cliente.getHistorial());
-		
-		return clienteService.save(clienteBuscado);
+
+		respuesta.put("Mensaje", "Cliente actualizado con éxito");
+		return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.OK);
 	}
 	
-	//Método para borrar usuario.
+	
+
+	// MÉTODO DE LA URL PARA BORRAR EL CLIENTE.
 	@DeleteMapping("/clientes/{id}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void borrarCliente(@PathVariable Long id) {
-		clienteService.delete(id);
+	public ResponseEntity<?> borrarCliente(@PathVariable Long id) {
+		// clienteService.delete(id);
+
+		Map<String, Object> respuesta = new HashMap<>();
+
+		try {
+			clienteService.delete(id);
+		} catch (DataAccessException e) {
+			respuesta.put("mensaje", "Error al borrar el cliente");
+			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.NOT_FOUND);
+		}
+
+		respuesta.put("mensaje", " El Cliente con ID: ".concat(id.toString()) + " ha sido borrado con éxito");
+		return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.OK);
+
 	}
 
 }
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
