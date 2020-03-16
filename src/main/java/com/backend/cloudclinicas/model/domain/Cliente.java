@@ -12,7 +12,10 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -29,13 +32,19 @@ public class Cliente implements Serializable {
 	private Long id;
 	
 	@NotNull
+	@Size(min=4, max=12)
+	@Column(nullable=false)
 	private String nombre;
+	
+	@NotEmpty
 	private String apellidos;
 	
 	//Mediante el uso de @Temporal es posible determinar que nuestro atributo almacena Hora.
 	@Temporal(TemporalType.DATE)
 	private Date fechanac;
 	
+	@NotEmpty
+	@Email
 	@Column(nullable=false, unique=true)
 	private String email;
 	

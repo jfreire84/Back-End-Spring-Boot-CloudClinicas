@@ -1,13 +1,16 @@
 package com.backend.cloudclinicas.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -67,9 +70,26 @@ public class ClienteController {
 	// MÉTODO DE LA URL PARA CREAR UN CLIENTE
 
 	@PostMapping("/clientes")
-	public ResponseEntity<?> crearCliente(@RequestBody Cliente cliente) {
+	public ResponseEntity<?> crearCliente(@Valid @RequestBody Cliente cliente, BindingResult br) {
 		Cliente nuevoCliente = null;
 		Map<String, Object> respuesta = new HashMap<>();
+
+		if (br.hasErrors()) {
+
+			// Creamos una lista para listar los errores.
+			List<String> errores = new ArrayList<>();
+
+			br.getFieldErrors();
+
+			// Con un bucle for agregamos los arrores a nuestra lista creada.
+			for (FieldError errors : br.getFieldErrors()) {
+				errores.add("El campo: " + errors.getField() + " " + errors.getDefaultMessage());
+			}
+
+			// Leemos con un bucle for la lista de errores.
+			respuesta.put("Errors", errores);
+			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.BAD_REQUEST);
+		}
 
 		// Control de errores al insertar un nuevo cliente
 		try {
@@ -88,13 +108,31 @@ public class ClienteController {
 
 	@PutMapping("/clientes/{id}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<?> actualizar(@RequestBody Cliente cliente, @PathVariable Long id) {
+	public ResponseEntity<?> actualizar(@Valid @RequestBody Cliente cliente, BindingResult br, @PathVariable Long id) {
 		// Guardamos en un objeto de tipo cliente el cliente con el id buscado
 
 		Cliente clienteBuscado;
 		
 		Map<String, Object> respuesta = new HashMap<>();
 
+		if (br.hasErrors()) {
+
+			// Creamos una lista para listar los errores.
+			List<String> errores = new ArrayList<>();
+
+			br.getFieldErrors();
+
+			// Con un bucle for agregamos los arrores a nuestra lista creada.
+			for (FieldError errors : br.getFieldErrors()) {
+				errores.add("El campo que deseas Actualizar: " + errors.getField() + " " + errors.getDefaultMessage());
+			}
+
+			// Leemos con un bucle for la lista de errores.
+			respuesta.put("Errors", errores);
+			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.BAD_REQUEST);
+		}
+
+		//Controlamos los errores con TryCatch
 		try {
 			clienteBuscado = clienteService.findById(id);
 		}catch (DataAccessException e) {
@@ -102,7 +140,7 @@ public class ClienteController {
 			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.NOT_FOUND);
 		}
 		
-		// Error si el cliente es nulo.
+		// Error si el id del cliente es nulo.
 		if (clienteBuscado == null) {
 			respuesta.put("mensaje", "Error al realizar la actualizacion en la base de datos");
 			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.NOT_FOUND);
@@ -112,12 +150,10 @@ public class ClienteController {
 		clienteBuscado.setNombre(cliente.getNombre());
 		clienteBuscado.setEmail(cliente.getEmail());
 		clienteBuscado.setHistorial(cliente.getHistorial());
-
+		
 		respuesta.put("Mensaje", "Cliente actualizado con éxito");
 		return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.OK);
 	}
-	
-	
 
 	// MÉTODO DE LA URL PARA BORRAR EL CLIENTE.
 	@DeleteMapping("/clientes/{id}")
