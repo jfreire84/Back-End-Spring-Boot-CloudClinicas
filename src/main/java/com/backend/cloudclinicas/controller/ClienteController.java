@@ -7,10 +7,13 @@ import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.backend.cloudclinicas.model.domain.Cliente;
 import com.backend.cloudclinicas.model.service.InterfazClienteService;
 
+@CrossOrigin(origins = {"Http://localhost:4200"})
 @RestController
 @RequestMapping("/api")
 public class ClienteController {
@@ -37,6 +41,15 @@ public class ClienteController {
 		return clienteService.findAll();
 	}
 
+	//Método de la url para buscar cliente y organizarlos por pagina.
+	
+	@GetMapping("/clientes/pagina/{pagina}")
+	public Page<Cliente> buscarPorPaginas(@PathVariable Integer pagina ){
+		return clienteService.findAll(PageRequest.of(pagina, 4));
+	}
+	
+	
+	
 	// MÉTODO DE LA URL PARA BUSCAR POR ID.
 
 	// En el controlador tenemos que controlar el manejo de errors, con la clase
@@ -136,7 +149,7 @@ public class ClienteController {
 		try {
 			clienteBuscado = clienteService.findById(id);
 		}catch (DataAccessException e) {
-			respuesta.put("mensaje", "Error al borrar el cliente");
+			respuesta.put("mensaje", "Error al actualizar el cliente");
 			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.NOT_FOUND);
 		}
 		
@@ -146,13 +159,19 @@ public class ClienteController {
 			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.NOT_FOUND);
 		}
 
+		
 		clienteBuscado.setApellidos(cliente.getApellidos());
 		clienteBuscado.setNombre(cliente.getNombre());
 		clienteBuscado.setEmail(cliente.getEmail());
 		clienteBuscado.setHistorial(cliente.getHistorial());
+		clienteBuscado.setFechanac(cliente.getFechanac());
+		clienteService.save(clienteBuscado);
+		
 		
 		respuesta.put("Mensaje", "Cliente actualizado con éxito");
-		return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.OK);
+		respuesta.put("mensaje", clienteBuscado);
+		return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.CREATED);
+		
 	}
 
 	// MÉTODO DE LA URL PARA BORRAR EL CLIENTE.

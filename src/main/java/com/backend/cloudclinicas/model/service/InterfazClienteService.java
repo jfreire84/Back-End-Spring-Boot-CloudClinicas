@@ -2,6 +2,9 @@ package com.backend.cloudclinicas.model.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.backend.cloudclinicas.model.domain.Cliente;
 
 public interface InterfazClienteService {
@@ -10,6 +13,9 @@ public interface InterfazClienteService {
 	
 	//Metodo para listar todos.
 	public List<Cliente> findAll();
+	
+	//Método para listar los pacientes con paginación
+	public Page<Cliente> findAll(Pageable pageable);
 	
 	//Método para buscar por id
 	public Cliente findById(Long id);

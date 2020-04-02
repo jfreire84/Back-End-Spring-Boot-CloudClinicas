@@ -32,19 +32,20 @@ public class Cliente implements Serializable {
 	private Long id;
 	
 	@NotNull
+	@NotEmpty(message="Nombre no puede estar vacío")
 	@Size(min=4, max=12)
 	@Column(nullable=false)
 	private String nombre;
 	
-	@NotEmpty
+	@NotEmpty(message="Apellidos no puede estar vacío")
 	private String apellidos;
 	
 	//Mediante el uso de @Temporal es posible determinar que nuestro atributo almacena Hora.
 	@Temporal(TemporalType.DATE)
 	private Date fechanac;
 	
-	@NotEmpty
-	@Email
+	@NotEmpty(message="Email no puede estar vacío")
+	@Email(message="No es una dirección de correo correcta")
 	@Column(nullable=false, unique=true)
 	private String email;
 	
