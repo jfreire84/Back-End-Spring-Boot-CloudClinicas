@@ -3,8 +3,6 @@ package com.backend.cloudclinicas.model.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.backend.cloudclinicas.model.dao.InterfazClienteDao;
@@ -26,11 +24,6 @@ public class impClienteService implements InterfazClienteService {
 		return (List<Cliente>) clienteDao.findAll();
 	}
 	
-	@Override
-	@Transactional(readOnly = true)
-	public Page<Cliente> findAll(Pageable pageable) {
-		return (Page<Cliente>) clienteDao.findAll(pageable);
-	}
 	
 	//Buscar por id
 	@Override

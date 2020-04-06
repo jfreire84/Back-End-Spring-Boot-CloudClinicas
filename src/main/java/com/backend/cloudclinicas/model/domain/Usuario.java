@@ -24,14 +24,14 @@ public class Usuario implements Serializable {
 	private Long id;
 	
 	@Column(unique=true, length=20)
-	private String nombre_usuario;
+	private String nombre;
 	
 	@Column(length=60)
 	private String contrasena;
 	
 	private Boolean habilitado;
 	
-	//Indicamos la relacion de Jpa. Muchos a muchos.
+	//Indicamos la relacion de Jpa. Muchos a muchos. Esto va a crear una tabla intermedia usuario_roles.
 	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	private List<Roles> roles;
 
@@ -39,16 +39,24 @@ public class Usuario implements Serializable {
 		return id;
 	}
 
+	public List<Roles> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Roles> roles) {
+		this.roles = roles;
+	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public String getNombre_usuario() {
-		return nombre_usuario;
+	public String getNombre() {
+		return nombre;
 	}
 
-	public void setNombre_usuario(String nombre_usuario) {
-		this.nombre_usuario = nombre_usuario;
+	public void setNombre(String nombre_usuario) {
+		this.nombre = nombre_usuario;
 	}
 
 	public String getContrasena() {

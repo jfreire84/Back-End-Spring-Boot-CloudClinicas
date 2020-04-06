@@ -7,8 +7,6 @@ import java.util.Map;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -41,14 +39,6 @@ public class ClienteController {
 		return clienteService.findAll();
 	}
 
-	//Método de la url para buscar cliente y organizarlos por pagina.
-	
-	@GetMapping("/clientes/pagina/{pagina}")
-	public Page<Cliente> buscarPorPaginas(@PathVariable Integer pagina ){
-		return clienteService.findAll(PageRequest.of(pagina, 4));
-	}
-	
-	
 	
 	// MÉTODO DE LA URL PARA BUSCAR POR ID.
 
