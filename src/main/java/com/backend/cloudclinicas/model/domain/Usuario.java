@@ -32,7 +32,7 @@ public class Usuario implements Serializable {
 	private Boolean habilitado;
 	
 	//Indicamos la relacion de Jpa. Muchos a muchos. Esto va a crear una tabla intermedia usuario_roles.
-	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private List<Roles> roles;
 
 	public Long getId() {
@@ -55,8 +55,8 @@ public class Usuario implements Serializable {
 		return nombre;
 	}
 
-	public void setNombre(String nombre_usuario) {
-		this.nombre = nombre_usuario;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	public String getContrasena() {
