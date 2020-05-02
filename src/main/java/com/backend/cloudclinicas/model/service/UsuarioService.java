@@ -18,11 +18,11 @@ import com.backend.cloudclinicas.model.dao.IUsuario;
 import com.backend.cloudclinicas.model.domain.Roles;
 import com.backend.cloudclinicas.model.domain.Usuario;
 
-import lombok.extern.slf4j.Slf4j;
 
 @Service("userDetailsService")
-@Slf4j
 public class UsuarioService implements UserDetailsService {
+	
+	
 
 	private Logger login = LoggerFactory.getLogger(UsuarioService.class);
 	
@@ -30,7 +30,7 @@ public class UsuarioService implements UserDetailsService {
 	private IUsuario usuarioDao;
 	
 	
-	//Método de la interfaz UserDetailsService para buscar el usuario por nombre.
+	//Método de la interfaz UserDetailsService para buscar el usuario de la base de datos por nombre.
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Usuario usuario = usuarioDao.findBynombre(username);
@@ -48,15 +48,9 @@ public class UsuarioService implements UserDetailsService {
 		
 		return new User(usuario.getNombre(), usuario.getContrasena(), usuario.getHabilitado(), true, true, true, roles );
 				
-		
-		/*
-		//Convertimos el listado de roles a un objeto tipo lista y le asignamos a la variable de tipo List GrantedAuthority.
-		List<GrantedAuthority> roles = usuario.getRoles()
-				.stream()
-				.map(role -> new SimpleGrantedAuthority(role.getNombre_role()))
-				.collect(Collectors.toList());
-		return new User(usuario.getNombre(), usuario.getContrasena(), usuario.getHabilitado(), true, true, true, roles );
-	*/
 	}
 
+
 }
+
+

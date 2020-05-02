@@ -11,9 +11,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+
 @Configuration 
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
+	
 	
 	//En esta clase vamos a configurar los usuarios que vamos a utilizar.
 
@@ -27,7 +29,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 		return new BCryptPasswordEncoder();
 	}
 	
-	//Metodo que va a crear un usuario nuestro que va a sustituir el que tenemos por defecto.
+	/*
+	 * Metodo que va a crear un usuario nuestro que va a sustituir el que tenemos por defecto 
+	 * que se crea al implementar Spring Security.
+	 */
+	
+	
 	@Autowired
 	public void configurerGlobal(AuthenticationManagerBuilder build) throws Exception {
 		build.userDetailsService(usuarioService).passwordEncoder(passwordEncoder());
@@ -37,26 +44,25 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		
+		//Permite acceso a todos los links de la api. Temporal.
+        http.authorizeRequests().antMatchers("/**").permitAll().anyRequest().authenticated()
+        .and().csrf().disable();
+        
+		
+        /*
 		http.authorizeRequests()
 		.antMatchers(HttpMethod.GET, "/api/clientes").permitAll()
 		.antMatchers(HttpMethod.GET, "/api/clientes/{id}").hasAnyRole("USER", "ADMIN")
 		.antMatchers(HttpMethod.POST, "/api/clientes").hasRole("ADMIN")
 		.antMatchers(HttpMethod.DELETE, "/api/clientes/{id}").hasRole("ADMIN")
 		.antMatchers(HttpMethod.PUT, "/api/clientes/{id}").hasRole("ADMIN")
+		
+		
 		.anyRequest().authenticated();
+		*/
 		
-		
-		
-		
-		/*
-		 * .antMatchers("/api/clientes/**")
-		 * .hasRole("ADMIN")
-		.antMatchers("/api/**")
-		.hasAnyRole("ADMIN", "USER");
-		 */
-		
-		
-		
+	
 	}
 
 	
@@ -64,3 +70,4 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	
 }
+
