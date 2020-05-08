@@ -22,8 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.backend.cloudclinicas.model.domain.Cliente;
 import com.backend.cloudclinicas.model.domain.Factura;
 import com.backend.cloudclinicas.model.service.IFacturasService;
 
@@ -42,7 +40,7 @@ public class FacturasController {
 		return facturaService.findAll();
 	}
 	
-	//Método de la Url para borrar por Id.
+	//Método de la Url para buscar por Id.
 	@GetMapping("/facturas/{id}")
 	public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
 
