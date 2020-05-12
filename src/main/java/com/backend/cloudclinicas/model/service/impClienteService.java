@@ -32,14 +32,14 @@ public class impClienteService implements InterfazClienteService {
 		return clienteDao.findById(id).orElse(null);
 	}
 
-	//Guardar cliente
+	//Guardar paciente
 	@Override
 	@Transactional
 	public Cliente save(Cliente cliente ) {
 		return clienteDao.save(cliente);
 	}
 
-	//Borrar cliente
+	//Borrar paciente
 	@Override
 	@Transactional
 	public void delete(Long id) {

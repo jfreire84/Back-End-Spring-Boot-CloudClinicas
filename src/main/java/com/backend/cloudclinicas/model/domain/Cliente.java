@@ -73,7 +73,7 @@ public class Cliente implements Serializable {
 	// Atributo List facturas para crear la relacion con el cliente. De tipo un
 	// cliente muchas facturas.
 	@JsonIgnoreProperties(value={"cliente", "hibernateLazyInitializer", "handler"}, allowSetters=true)
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "cliente", cascade = CascadeType.ALL)
 	private List<Factura> facturas;
 
 	public List<Factura> getFacturas() {

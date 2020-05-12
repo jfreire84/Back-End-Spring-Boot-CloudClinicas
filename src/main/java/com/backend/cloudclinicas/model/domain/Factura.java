@@ -37,13 +37,13 @@ public class Factura implements Serializable {
 
 	// Atributo cliente para hacer la relacion con el cliente. De tipo Muchas facturas relacionado con solo un cliente.
 	@JsonIgnoreProperties(value={"facturas", "hibernateLazyInitializer", "handler"}, allowSetters=true)
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Cliente cliente;
  
 	
 	//Atributo para la relacion de tablas con JoinColum.
-	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" }) 
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "factura_id")
 	private List<LineasFactura> lineasFactura;
 	

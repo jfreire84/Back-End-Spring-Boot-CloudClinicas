@@ -6,7 +6,7 @@ import com.backend.cloudclinicas.model.domain.Factura;
 
 public interface IFacturasService {
 	
-	//Método paralistar todas las facturas
+	//Método para listar todas las facturas
 	
 	public List<Factura> findAll();
 	

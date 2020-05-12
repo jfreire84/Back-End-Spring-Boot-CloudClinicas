@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.backend.cloudclinicas.model.domain.Cliente;
 import com.backend.cloudclinicas.model.service.InterfazClienteService;
 
-@CrossOrigin(origins = {"Http://localhost:4200"})
+@CrossOrigin(origins = {"Http://localhost:4200", "*"})
 @RestController
 @RequestMapping("/api")
 public class ClienteController {
@@ -73,7 +73,7 @@ public class ClienteController {
 	// MÉTODO DE LA URL PARA CREAR UN CLIENTE
 
 	@PostMapping("/clientes")
-	public ResponseEntity<?> crearCliente(@Valid @RequestBody Cliente cliente, BindingResult br) {
+ 	public ResponseEntity<?> crearCliente(@Valid @RequestBody Cliente cliente, BindingResult br) {
 		Cliente nuevoCliente = null;
 		Map<String, Object> respuesta = new HashMap<>();
 
